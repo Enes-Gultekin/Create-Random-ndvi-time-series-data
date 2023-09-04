@@ -4,16 +4,27 @@ library(ggplot2)
 #import points
 coor = read.csv("points.csv")
 coor = data.frame(coor)
+head(coor)
+
+#clearing data
+coor= data.frame(coor$x,coor$y)
+colnames(coor)=c("x","y")
+head(coor)
+
 
 #create random ndvi values
 ndvi= runif(1000,min=0,max=1)
+ndvi = as.data.frame(ndvi)
 
 #create time interval
 time_index=seq(from=as.Date("1995-11-11"),to=as.Date("2023-11-11"),by="6 months")
 
+#create an empty raster data extended with the coordinates of "coor"  
+ext_rast= extent(min(coor$x),max(coor$x),min(coor$y),max(coor$y))
+empty_raster= raster(ext_rast,resolution=1)
 
-
-
+#assign all values in to empty_raster
+ndvi_ts_raster= rasterize(coor,ext=empty_raster,field=ndvi)
 
 #import coordinates
 coor = read.csv("points.csv")
@@ -24,7 +35,7 @@ ndvi =as.data.frame(ndvi)
 
 
 ndvi_s = data.frame(time_index,ndvi)
-image(ndvi)http://127.0.0.1:38637/graphics/plot_zoom_png?width=825&height=771
+image(ndvi)
 df <- coor %>% select(-OID)
 ts_df =data.frame(df,ndvi_s)
 
