@@ -13,7 +13,7 @@ head(coor)
 
 
 #create random ndvi values
-ndvi= runif(1000,min=0,max=1)
+ndvi= runif(850,min=0,max=1)
 ndvi = as.data.frame(ndvi)
 
 #create time interval
@@ -22,16 +22,18 @@ time_index=seq(from=as.Date("1995-11-11"),to=as.Date("2023-11-11"),by="6 months"
 #create an empty raster data extended with the coordinates of "coor"  
 ext_rast= extent(min(coor$x),max(coor$x),min(coor$y),max(coor$y))
 empty_raster= raster(ext_rast,resolution=1)
+crs(empty_raster) =CRS("+proj=utm +zone=30 +datum=WGS84")
 
 #assign all values in to empty_raster
-ndvi_ts_raster= rasterize(coor,ext=empty_raster,field=ndvi)
+ndvi_ts_raster= rasterize(empty_raster,ext=ext_rast,field=ndvi)
 
 #import coordinates
 coor = read.csv("points.csv")
 coor = as.data.frame(coor)
-#create random ndvi values
+#create random ndvi  values
 ndvi = runif(850,min=0,max=0.7 )
 ndvi =as.data.frame(ndvi)
+
 
 
 ndvi_s = data.frame(time_index,ndvi)
